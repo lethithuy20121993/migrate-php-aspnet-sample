@@ -1,6 +1,6 @@
 # Migrate from PHP to ASP.NET Project
-PHP 7.0.0
-ASP.NET Core 8.0
+- PHP 7.0.0
+- ASP.NET Core 8.0
 
 ## Build and Run
 ### php Project

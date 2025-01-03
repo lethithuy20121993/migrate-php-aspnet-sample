@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   php:
-    build: ./php
+    image: php:7.0-apache  # PHP 7.0 image
     container_name: php_app
     volumes:
       - ./php-login:/var/www/html
@@ -10,7 +10,7 @@ services:
       - "8000:80"
 
   aspnet:
-    build: ./aspnet
+    image: mcr.microsoft.com/dotnet/aspnet:8.0 # Using asp.net core 8.0
     container_name: aspnet_app
     volumes:
       - ./aspnet-login:/app

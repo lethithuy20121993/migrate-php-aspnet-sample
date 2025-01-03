@@ -10,9 +10,7 @@ services:
       - "8000:80"
 
   aspnet:
-    image: mcr.microsoft.com/dotnet/aspnet:8.0 # Using asp.net core 8.0
+    build: ./aspnet-login
     container_name: aspnet_app
-    volumes:
-      - ./aspnet-login:/app
     ports:
       - "8080:80"

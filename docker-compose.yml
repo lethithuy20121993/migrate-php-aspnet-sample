@@ -16,3 +16,4 @@ services:
       - ./aspnet-login:/app
     ports:
       - "8080:80"
+    entrypoint: ["dotnet", "aspnet-login.dll"]

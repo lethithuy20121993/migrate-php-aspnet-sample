@@ -2,19 +2,17 @@ version: '3.8'
 
 services:
   php:
-    image: php:8.1-apache
+    build: ./php
     container_name: php_app
     volumes:
       - ./php-login:/var/www/html
     ports:
-      - "8080:80"
-    command: apache2-foreground
+      - "8000:80"
 
   aspnet:
-    image: mcr.microsoft.com/dotnet/aspnet:7.0
+    build: ./aspnet
     container_name: aspnet_app
     volumes:
       - ./aspnet-login:/app
     ports:
-      - "8081:80"
-    command: dotnet /app/yourapp.dll
+      - "8080:80"

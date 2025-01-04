@@ -36,6 +36,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.Urls.Add("http://0.0.0.0:8080");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");

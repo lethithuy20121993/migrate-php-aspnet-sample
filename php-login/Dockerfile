@@ -1,6 +1,6 @@
 FROM php:7.0-apache
 
-# Install dependencies and configure PHP
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -13,20 +13,19 @@ RUN apt-get update && apt-get install -y \
 # Copy your source code into the container
 COPY . /var/www/html
 
-# Copy Apache configuration
-COPY my_apache_config.conf /etc/apache2/conf-available/my_apache_config.conf
+# Set proper ownership and permissions
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 775 /var/www/html
 
-# Enable Apache configuration
+# Copy and enable Apache configuration
+COPY my_apache_config.conf /etc/apache2/conf-available/my_apache_config.conf
 RUN a2enconf my_apache_config.conf
 
-# Change ownership of the /var/www/html directory
-RUN chown -R www-data:www-data /var/www/html
-
-# Enable Apache mod_rewrite
+# Enable rewrite module for Apache
 RUN a2enmod rewrite
 
 # Expose port 80 for Apache
 EXPOSE 80
 
-# CMD to run Apache when the container starts
+# Run Apache when the container starts
 CMD ["apache2-foreground"]

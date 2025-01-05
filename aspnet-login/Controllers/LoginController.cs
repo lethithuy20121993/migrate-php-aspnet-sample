@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -10,6 +11,12 @@ namespace aspnet_login.Controllers
     public class LoginController : Controller
     {
         private string usersFile = Path.Combine(Directory.GetCurrentDirectory(), "App_Data", "users.json");
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public LoginController(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
+        }
 
         // Get the list of users from the JSON file
         private List<User> GetUsers()
@@ -36,30 +43,41 @@ namespace aspnet_login.Controllers
             return View();
         }
 
+        public IActionResult LoginSuccess()
+        {
+            return View();
+        }
+
         // Handle login process
         [HttpPost]
         public IActionResult Index(string action, string email, string username, string password)
         {
             Console.WriteLine($"HttpPost Index action: {action}, email: {email}, username: {username}, password: {password}");
             var users = GetUsers();
+            // Get the path of the popup.html file
+            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "popup.html");
+             // Read the content of the popup.html file
+            string popupHtml = System.IO.File.ReadAllText(filePath);
+            // Pass the popupHtml content to the view
+            ViewData["PopupHtml"] = popupHtml;
+
             if (action == "login")
             {
                 var user = users.Find(u => u.Email == email && u.Password == password);
                 if (user != null)
                 {
-                    ViewBag.Message = "Login successful!";
                     Console.WriteLine("Login successful!");
-                    return View();
+                    return RedirectToAction("LoginSuccess");
                 }
-                ViewBag.Message = "Invalid email or password!";
-                Console.WriteLine("Invalid email or password!");
+                ViewData["PopupMessage"] = "Login failed. Please try again.";
+                Console.WriteLine("Login failed. Please try again.");
             }
             else if (action == "signup")
             {
                 // Check if the email already exists
                 if (users.Exists(u => u.Email == email))
                 {
-                    ViewBag.Message = "Email already exists.";
+                    ViewData["PopupMessage"] = "Email already exists.";
                     Console.WriteLine("Email already exists.");
                     return View();
                 }
@@ -71,7 +89,7 @@ namespace aspnet_login.Controllers
                 // Save the updated list to the JSON file
                 SaveUsers(users);
 
-                ViewBag.Message = "Sign up successful!";
+                ViewData["PopupMessage"] = "Sign up successful!";
                 Console.WriteLine("Sign up successful!");
                 return View();
             }
@@ -98,19 +116,18 @@ namespace aspnet_login.Controllers
                 var user = users.Find(u => u.Email == email && u.Password == password);
                 if (user != null)
                 {
-                    ViewBag.Message = "Login successful!";
                     Console.WriteLine("Login successful!");
-                    return View();
+                    return RedirectToAction("LoginSuccess");
                 }
-                ViewBag.Message = "Invalid email or password!";
-                Console.WriteLine("Invalid email or password!");
+                ViewData["PopupMessage"] = "Login failed. Please try again.";
+                Console.WriteLine("Login failed. Please try again.");
             }
             else if (action == "signup")
             {
                 // Check if the email already exists
                 if (users.Exists(u => u.Email == email))
                 {
-                    ViewBag.Message = "Email already exists.";
+                    ViewData["PopupMessage"] = "Email already exists.";
                     Console.WriteLine("Email already exists.");
                     return View();
                 }
@@ -122,7 +139,7 @@ namespace aspnet_login.Controllers
                 // Save the updated list to the JSON file
                 SaveUsers(users);
 
-                ViewBag.Message = "Sign up successful!";
+                ViewData["PopupMessage"] = "Sign up successful!";
                 Console.WriteLine("Sign up successful!");
                 return View();
             }

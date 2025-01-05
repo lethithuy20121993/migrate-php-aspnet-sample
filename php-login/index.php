@@ -1,6 +1,8 @@
 <?php
 // Path to user storage file
 $usersFile = 'users.json';
+include 'popup.html';
+
 
 
 // Read data from json file
@@ -32,14 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         $found = false;
         foreach ($users as $user) {
             if ($user['email'] === $email && $user['password'] === $password) {
-                echo "Login successful!";
+                header('Location: success.php');
                 $found = true;
                 break;
             }
         }
 
         if (!$found) {
-            echo "Username or password is incorrect.";
+          echo "<script>showPopup('Login failed. Please try again.');</script>";
         }
     } elseif ($_POST['action'] == 'signup') {
         $email = $_POST['email'];
@@ -50,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         $users = getUsers();
         foreach ($users as $user) {
             if ($user['email'] === $email) {
-                echo "Email already exists.";
+                echo "<script>showPopup('Email already exists.');</script>";
                 exit;
             }
         }
@@ -61,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         // Save into json file
         saveUsers($users);
 
-        echo "Sign up successful!";
+        echo "<script>showPopup('Sign up successful!');</script>";
     } else {
-      echo "No action";
+      echo "<script>showPopup('No action');</script>";
     }
 }
 

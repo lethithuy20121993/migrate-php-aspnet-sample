@@ -63,10 +63,23 @@
     </div>
   </div>
 
-    @if (ViewBag.Message != null)
+    <!-- @if (ViewBag.Message != null)
     {
         <p>@ViewBag.Message</p>
-    }
+    } -->
+
+  <!-- Include your popup HTML -->
+
+  @if (ViewData["PopupHtml"] != null)
+  {
+    @Html.Raw(ViewData["PopupHtml"])
+  }
+  @if (ViewData["PopupMessage"] != null)
+  {
+    <script>
+      showPopup('@Html.Raw(ViewData["PopupMessage"])');
+    </script>
+  }
 
   <!-- Include your JavaScript -->
   <script src="~/js/index.js"></script>

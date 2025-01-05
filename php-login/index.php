@@ -1,4 +1,7 @@
 <?php
+// Start output buffering
+ob_start();
+
 // Path to user storage file
 $usersFile = 'users.json';
 include 'popup.html';
@@ -34,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         $found = false;
         foreach ($users as $user) {
             if ($user['email'] === $email && $user['password'] === $password) {
-                header('Location: success.php');
                 $found = true;
-                break;
+                header('Location: success.php');
+                exit;
             }
         }
 
@@ -69,6 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     }
 }
 
+// End output buffering and flush
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
